@@ -58,9 +58,21 @@ const animObserver = new IntersectionObserver((entries) => {
     });
 }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
 
-document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right').forEach(el => {
+document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right, .tread-divider').forEach(el => {
     animObserver.observe(el);
 });
+
+// Skid mark reveal on CTA sections
+const skidObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('skid-visible');
+            skidObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.3 });
+
+document.querySelectorAll('.cta-section').forEach(el => skidObserver.observe(el));
 
 // Animated stat counters
 function animateCounter(el, target, suffix) {
