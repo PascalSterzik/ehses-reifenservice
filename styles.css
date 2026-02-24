@@ -1013,17 +1013,17 @@ textarea { resize: vertical; min-height: 130px; }
     text-shadow: 0 0 40px rgba(230, 57, 70, 0.3);
 }
 
-/* Back to top button */
+/* Tire-shaped Back to Top Button */
 .back-to-top {
     position: fixed;
     bottom: 32px;
     right: 32px;
-    width: 48px;
-    height: 48px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     background: var(--primary);
     color: #fff;
-    border: none;
+    border: 4px solid var(--text-muted);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -1031,9 +1031,15 @@ textarea { resize: vertical; min-height: 130px; }
     z-index: 90;
     opacity: 0;
     transform: translateY(20px);
-    transition: opacity 0.4s ease, transform 0.4s var(--ease-out), background 0.3s ease, box-shadow 0.3s ease;
+    transition: opacity 0.4s ease, transform 0.4s var(--ease-out), background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     pointer-events: none;
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-lg), inset 0 0 0 3px rgba(255,255,255,0.1);
+    /* Tire tread pattern on the border */
+    background-image:
+        radial-gradient(circle at center, var(--primary) 38%, transparent 38%),
+        radial-gradient(circle at center, var(--primary-light) 55%, transparent 55%),
+        repeating-conic-gradient(from 0deg, rgba(255,255,255,0.08) 0deg 10deg, transparent 10deg 20deg);
+    background-size: 100% 100%;
 }
 .back-to-top.visible {
     opacity: 1;
@@ -1041,13 +1047,23 @@ textarea { resize: vertical; min-height: 130px; }
     pointer-events: auto;
 }
 .back-to-top:hover {
-    background: var(--accent);
-    box-shadow: var(--shadow-accent);
-    transform: translateY(-3px);
+    background-color: var(--accent);
+    border-color: var(--accent-hover);
+    box-shadow: var(--shadow-accent), inset 0 0 0 3px rgba(255,255,255,0.15);
+    transform: translateY(-3px) rotate(-15deg);
+    background-image:
+        radial-gradient(circle at center, var(--accent) 38%, transparent 38%),
+        radial-gradient(circle at center, var(--accent-hover) 55%, transparent 55%),
+        repeating-conic-gradient(from 0deg, rgba(255,255,255,0.1) 0deg 10deg, transparent 10deg 20deg);
 }
-.back-to-top:active { transform: translateY(-1px); }
-.back-to-top svg { transition: transform 0.3s var(--ease-smooth); }
-.back-to-top:hover svg { transform: translateY(-2px); }
+.back-to-top:active { transform: translateY(-1px) rotate(-10deg); }
+.back-to-top .tire-arrow {
+    width: 22px;
+    height: 22px;
+    transition: transform 0.3s var(--ease-smooth);
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+}
+.back-to-top:hover .tire-arrow { transform: translateY(-2px); }
 
 /* Enhanced form focus with animated underline */
 .form-group { position: relative; }
@@ -1176,109 +1192,168 @@ textarea { resize: vertical; min-height: 130px; }
 }
 
 /* ============================================
-   Tire Track Decorative Elements
-   Tread marks, rubber accents, wheel motifs
+   Tire & Automotive Decorative Elements
+   Bold visuals, tire wheel separators, skid marks
    ============================================ */
 
-/* Tire Tread Section Divider */
-.tread-divider {
-    position: relative;
-    height: 24px;
+/* Large Tire Wheel Section Divider */
+.tire-separator {
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-    z-index: 2;
-}
-.tread-divider .tread-line {
-    position: absolute;
-    top: 50%;
-    left: 5%;
-    right: 5%;
-    height: 2px;
-    background: repeating-linear-gradient(
-        90deg,
-        var(--text-muted) 0px,
-        var(--text-muted) 8px,
-        transparent 8px,
-        transparent 14px
-    );
-    opacity: 0;
-    transform: scaleX(0);
-    transform-origin: center;
-    transition: transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease;
-}
-.tread-divider.visible .tread-line {
-    transform: scaleX(1);
-    opacity: 0.2;
-}
-.tread-divider .tread-icon {
+    padding: 20px 0;
     position: relative;
     z-index: 2;
-    color: var(--accent);
-    opacity: 0;
-    transform: scale(0) rotate(-90deg);
-    transition: opacity 0.4s ease 0.8s, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.7s;
-    background: var(--white);
-    padding: 0 8px;
 }
-.tread-divider.visible .tread-icon {
-    opacity: 0.35;
+.tire-separator .tire-wheel {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    opacity: 0;
+    transform: scale(0.5) rotate(-180deg);
+    transition: opacity 0.6s var(--ease-out), transform 0.9s var(--ease-spring);
+}
+.tire-separator.visible .tire-wheel {
+    opacity: 1;
     transform: scale(1) rotate(0deg);
+}
+.tire-separator .tire-line {
+    flex: 1;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--border), var(--text-muted), var(--border), transparent);
+    opacity: 0;
+    transform: scaleX(0);
+    transition: opacity 0.5s ease 0.3s, transform 1s var(--ease-out) 0.3s;
+}
+.tire-separator .tire-line-left { transform-origin: right; margin-right: 16px; }
+.tire-separator .tire-line-right { transform-origin: left; margin-left: 16px; }
+.tire-separator.visible .tire-line {
+    opacity: 0.5;
+    transform: scaleX(1);
+}
+
+/* Spinning tire on scroll */
+@keyframes tireSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+.tire-separator.visible .tire-wheel {
+    animation: tireSpin 8s linear infinite;
+    animation-delay: 0.9s;
 }
 
 /* Tire mark skid accents on CTA */
 .cta-section { position: relative; overflow: hidden; }
-.skid-mark {
+.skid-marks {
     position: absolute;
+    inset: 0;
     pointer-events: none;
     z-index: 0;
+    overflow: hidden;
 }
-.skid-mark svg {
+.skid-marks::before,
+.skid-marks::after {
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 200px;
     opacity: 0;
-    transition: opacity 0.8s ease;
+    transition: opacity 1s ease;
 }
-.cta-section.skid-visible .skid-mark svg {
-    opacity: 0.06;
+.cta-section.skid-visible .skid-marks::before,
+.cta-section.skid-visible .skid-marks::after {
+    opacity: 0.07;
 }
-.skid-mark-left {
-    bottom: -5px;
-    left: -20px;
-    transform: rotate(-3deg);
+.skid-marks::before {
+    left: -40px;
+    top: 0;
+    background: repeating-linear-gradient(
+        180deg,
+        transparent 0px,
+        rgba(255,255,255,0.4) 4px,
+        transparent 8px
+    );
+    transform: rotate(-5deg) scaleY(1.2);
 }
-.skid-mark-right {
-    top: -5px;
-    right: -20px;
-    transform: rotate(3deg) scaleX(-1);
+.skid-marks::after {
+    right: -40px;
+    top: 0;
+    background: repeating-linear-gradient(
+        180deg,
+        transparent 0px,
+        rgba(255,255,255,0.3) 4px,
+        transparent 8px
+    );
+    transform: rotate(5deg) scaleY(1.2);
 }
 
-/* Wrench accent in hero */
+/* Wrench accent in hero (larger, more visible) */
 .hero-wrench {
     position: absolute;
     pointer-events: none;
     z-index: 1;
-    opacity: 0.06;
-    top: 15%;
-    right: 8%;
+    opacity: 0.12;
+    top: 10%;
+    right: 5%;
     transform: rotate(25deg);
+    animation: wrenchFloat 6s ease-in-out infinite;
+}
+@keyframes wrenchFloat {
+    0%, 100% { transform: rotate(25deg) translateY(0); }
+    50% { transform: rotate(28deg) translateY(-8px); }
+}
+.hero-wrench svg {
+    filter: drop-shadow(0 4px 20px rgba(230, 57, 70, 0.2));
 }
 
-/* Wheel/lug nut mini-divider */
-.lug-divider {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 6px 0;
-    opacity: 0.15;
-    color: var(--text-muted);
+/* Floating tire in hero (opposite side) */
+.hero-tire {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+    bottom: 10%;
+    left: 3%;
+    opacity: 0.08;
+    animation: tireFloat 8s ease-in-out infinite;
+}
+@keyframes tireFloat {
+    0%, 100% { transform: rotate(0deg) translateY(0); }
+    50% { transform: rotate(15deg) translateY(-10px); }
 }
 
-/* Responsive: hide decorations on small screens */
+/* Tire tread track background pattern for sections */
+.tread-bg {
+    position: relative;
+}
+.tread-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 120px;
+    height: 100%;
+    opacity: 0.03;
+    background: repeating-linear-gradient(
+        0deg,
+        var(--primary) 0px,
+        var(--primary) 6px,
+        transparent 6px,
+        transparent 14px
+    );
+    pointer-events: none;
+}
+
+/* Responsive: scale down decorations on mobile */
 @media (max-width: 768px) {
     .hero-wrench { display: none; }
-    .skid-mark { display: none; }
-    .tread-divider { margin: 0 16px; }
+    .hero-tire { display: none; }
+    .tire-separator .tire-wheel { width: 48px; height: 48px; }
+    .tire-separator { padding: 12px 0; }
+    .skid-marks { display: none; }
+    .tread-bg::before { width: 60px; }
 }
 @media (max-width: 480px) {
-    .tread-divider { height: 16px; }
+    .tire-separator .tire-wheel { width: 40px; height: 40px; }
+    .tire-separator .tire-line { height: 2px; }
+    .back-to-top { width: 50px; height: 50px; bottom: 20px; right: 20px; }
 }

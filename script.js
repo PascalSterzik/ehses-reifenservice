@@ -58,7 +58,7 @@ const animObserver = new IntersectionObserver((entries) => {
     });
 }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
 
-document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right, .tread-divider').forEach(el => {
+document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right, .tire-separator').forEach(el => {
     animObserver.observe(el);
 });
 
