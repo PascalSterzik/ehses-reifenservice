@@ -1191,59 +1191,6 @@ textarea { resize: vertical; min-height: 130px; }
     .trust-bar .container { flex-direction: column; gap: 12px; }
 }
 
-/* ============================================
-   Tire & Automotive Decorative Elements
-   Bold visuals, tire wheel separators, skid marks
-   ============================================ */
-
-/* Large Tire Wheel Section Divider */
-.tire-separator {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 24px;
-    height: 0;
-    margin-top: -32px;
-    margin-bottom: -32px;
-    position: relative;
-    z-index: 5;
-}
-.tire-separator .tire-wheel {
-    width: 64px;
-    height: 64px;
-    flex-shrink: 0;
-    opacity: 0;
-    transform: scale(0.5) rotate(-180deg);
-    transition: opacity 0.6s var(--ease-out), transform 0.9s var(--ease-spring);
-}
-.tire-separator.visible .tire-wheel {
-    opacity: 1;
-    transform: scale(1) rotate(0deg);
-}
-.tire-separator .tire-line {
-    flex: 1;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, var(--border), var(--text-muted), var(--border), transparent);
-    opacity: 0;
-    transform: scaleX(0);
-    transition: opacity 0.5s ease 0.3s, transform 1s var(--ease-out) 0.3s;
-}
-.tire-separator .tire-line-left { transform-origin: right; margin-right: 16px; }
-.tire-separator .tire-line-right { transform-origin: left; margin-left: 16px; }
-.tire-separator.visible .tire-line {
-    opacity: 0.5;
-    transform: scaleX(1);
-}
-
-/* Spinning tire on scroll */
-@keyframes tireSpin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-.tire-separator.visible .tire-wheel {
-    animation: tireSpin 8s linear infinite;
-    animation-delay: 0.9s;
-}
 
 /* Tire mark skid accents on CTA */
 .cta-section { position: relative; overflow: hidden; }
@@ -1350,13 +1297,9 @@ textarea { resize: vertical; min-height: 130px; }
 @media (max-width: 768px) {
     .hero-wrench { display: none; }
     .hero-tire { display: none; }
-    .tire-separator .tire-wheel { width: 48px; height: 48px; }
-    .tire-separator { padding: 12px 0; }
     .skid-marks { display: none; }
     .tread-bg::before { width: 60px; }
 }
 @media (max-width: 480px) {
-    .tire-separator .tire-wheel { width: 40px; height: 40px; }
-    .tire-separator .tire-line { height: 2px; }
     .back-to-top { width: 50px; height: 50px; bottom: 20px; right: 20px; }
 }
