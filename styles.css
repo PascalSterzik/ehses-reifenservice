@@ -197,6 +197,33 @@ section {
     line-height: 1.7;
 }
 
+.section-padding {
+    padding: var(--section-gap) 0;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.section-header .section-subtitle {
+    margin: 0 auto;
+}
+
+.section-title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 16px;
+}
+
+.section-header .section-title {
+    margin-bottom: 12px;
+}
+
 /* --- Buttons --- */
 .btn {
     display: inline-flex;
@@ -641,6 +668,49 @@ section {
     line-height: 1.65;
 }
 
+/* Service card icon variant (homepage) */
+.service-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-md);
+    background: rgba(230, 57, 70, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    transition: all var(--transition-base);
+}
+
+.service-icon svg {
+    color: var(--accent);
+    transition: transform var(--transition-base);
+}
+
+.service-card:hover .service-icon {
+    background: var(--accent);
+}
+
+.service-card:hover .service-icon svg {
+    color: #fff;
+    transform: rotate(-8deg);
+}
+
+.service-card > .service-icon {
+    margin: 28px 28px 0;
+}
+
+.service-card > h3 {
+    margin: 0 28px 10px;
+    font-size: 1.1rem;
+}
+
+.service-card > p {
+    margin: 0 28px 28px;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    line-height: 1.65;
+}
+
 .service-card-link {
     display: inline-flex;
     align-items: center;
@@ -848,6 +918,12 @@ section {
     flex-shrink: 0;
 }
 
+.testimonial-author-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
 .testimonial-name {
     font-weight: 600;
     font-size: 0.9rem;
@@ -979,23 +1055,29 @@ section {
     pointer-events: none;
 }
 
-.cta-content {
+.cta-content,
+.cta-card {
     position: relative;
     z-index: 1;
 }
 
-.cta-content h2 {
+.cta-content h2,
+.cta-card h2,
+.cta-section h2 {
     color: var(--text-on-dark);
     margin-bottom: 16px;
 }
 
-.cta-content p {
+.cta-content p,
+.cta-card p,
+.cta-section p {
     color: var(--text-on-dark-muted);
     margin: 0 auto 36px;
     font-size: 1.05rem;
 }
 
-.cta-actions {
+.cta-actions,
+.cta-buttons {
     display: flex;
     justify-content: center;
     gap: 16px;
