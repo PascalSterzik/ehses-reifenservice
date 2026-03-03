@@ -1,154 +1,218 @@
 /* ============================================
    Dieter Ehses Reifenservice | script.js
+   Fresh rebuild — EMBER-level quality
    ============================================ */
 
-// Mobile Navigation
-const hamburger = document.getElementById('hamburger');
-const nav = document.getElementById('nav');
+(function () {
+    'use strict';
 
-if (hamburger && nav) {
-    hamburger.addEventListener('click', () => {
-        nav.classList.toggle('open');
-        hamburger.classList.toggle('active');
-    });
-    nav.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', () => {
-            nav.classList.remove('open');
-            hamburger.classList.remove('active');
+    /* ---- Mobile Navigation ---- */
+    const hamburger = document.getElementById('hamburger');
+    const nav = document.getElementById('nav');
+
+    if (hamburger && nav) {
+        hamburger.addEventListener('click', () => {
+            nav.classList.toggle('open');
+            hamburger.classList.toggle('active');
+        });
+        nav.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                nav.classList.remove('open');
+                hamburger.classList.remove('active');
+            });
+        });
+    }
+
+    /* ---- Sticky Header ---- */
+    const header = document.getElementById('header');
+    if (header) {
+        window.addEventListener('scroll', () => {
+            header.classList.toggle('scrolled', window.scrollY > 20);
+        }, { passive: true });
+    }
+
+    /* ---- Scroll Progress Bar ---- */
+    const scrollProgress = document.querySelector('.scroll-progress');
+    if (scrollProgress) {
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            scrollProgress.style.width = docHeight > 0 ? (scrollTop / docHeight) * 100 + '%' : '0%';
+        }, { passive: true });
+    }
+
+    /* ---- Back to Top ---- */
+    const backToTop = document.getElementById('backToTop');
+    if (backToTop) {
+        window.addEventListener('scroll', () => {
+            backToTop.classList.toggle('visible', window.scrollY > 400);
+        }, { passive: true });
+        backToTop.addEventListener('click', () => {
+            smoothScrollTo(0);
+        });
+    }
+
+    /* ---- Custom Smooth Scroll (rule #25) ---- */
+    function smoothScrollTo(targetY, duration) {
+        duration = duration || 800;
+        const startY = window.scrollY;
+        const diff = targetY - startY;
+        let startTime = null;
+
+        function easeInOutCubic(t) {
+            return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        }
+
+        function step(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            window.scrollTo(0, startY + diff * easeInOutCubic(progress));
+            if (progress < 1) {
+                requestAnimationFrame(step);
+            }
+        }
+        requestAnimationFrame(step);
+    }
+
+    /* ---- Smooth Scroll for Anchor Links ---- */
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+            if (href === '#') return;
+            const target = document.querySelector(href);
+            if (target) {
+                e.preventDefault();
+                const headerOffset = header ? header.offsetHeight : 0;
+                const targetPos = target.getBoundingClientRect().top + window.scrollY - headerOffset - 16;
+                smoothScrollTo(targetPos);
+            }
         });
     });
-}
 
-// Header shadow on scroll
-const header = document.getElementById('header');
-if (header) {
-    window.addEventListener('scroll', () => {
-        header.classList.toggle('scrolled', window.scrollY > 20);
-    }, { passive: true });
-}
-
-// Scroll progress bar
-const scrollProgress = document.querySelector('.scroll-progress');
-if (scrollProgress) {
-    window.addEventListener('scroll', () => {
-        const scrollTop = window.scrollY;
-        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-        scrollProgress.style.width = progress + '%';
-    }, { passive: true });
-}
-
-// Back to top button
-const backToTop = document.getElementById('backToTop');
-if (backToTop) {
-    window.addEventListener('scroll', () => {
-        backToTop.classList.toggle('visible', window.scrollY > 400);
-    }, { passive: true });
-    backToTop.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-}
-
-// IntersectionObserver for fade-in, slide-in-left, slide-in-right
-const animObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-        }
-    });
-}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
-
-document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right, .tire-separator').forEach(el => {
-    animObserver.observe(el);
-});
-
-// Skid mark reveal on CTA sections
-const skidObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('skid-visible');
-            skidObserver.unobserve(entry.target);
-        }
-    });
-}, { threshold: 0.3 });
-
-document.querySelectorAll('.cta-section').forEach(el => skidObserver.observe(el));
-
-// Animated stat counters
-function animateCounter(el, target, suffix) {
-    const duration = 1800;
-    const start = performance.now();
-    const isDecimal = target % 1 !== 0;
-
-    function update(now) {
-        const elapsed = now - start;
-        const progress = Math.min(elapsed / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        const current = eased * target;
-
-        if (isDecimal) {
-            el.textContent = current.toFixed(1).replace('.', ',') + suffix;
-        } else {
-            el.textContent = Math.floor(current).toLocaleString('de-DE') + suffix;
-        }
-
-        if (progress < 1) {
-            requestAnimationFrame(update);
-        } else {
-            if (isDecimal) {
-                el.textContent = target.toFixed(1).replace('.', ',') + suffix;
-            } else {
-                el.textContent = target.toLocaleString('de-DE') + suffix;
-            }
-            el.setAttribute('data-animated', '');
-        }
-    }
-    requestAnimationFrame(update);
-}
-
-const statNumbers = document.querySelectorAll('.stat-number');
-if (statNumbers.length > 0) {
-    const statsObserver = new IntersectionObserver((entries) => {
+    /* ---- Scroll Reveal (IntersectionObserver) ---- */
+    const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting && !entry.target.hasAttribute('data-counted')) {
-                entry.target.setAttribute('data-counted', '');
-                const text = entry.target.textContent.trim();
-                const match = text.match(/^([\d.,]+)(\+|%)?$/);
-                if (match) {
-                    const numStr = match[1].replace(',', '.');
-                    const num = parseFloat(numStr);
-                    const suffix = match[2] || '';
-                    animateCounter(entry.target, num, suffix);
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .stagger-children, .hero-stagger').forEach(el => {
+        revealObserver.observe(el);
+    });
+
+    /* ---- Animated Stat Counters ---- */
+    function animateCounter(el) {
+        const target = parseFloat(el.dataset.target);
+        const suffix = el.dataset.suffix || '';
+        const isDecimal = el.dataset.decimal === 'true';
+        const duration = 1800;
+        const start = performance.now();
+
+        function update(now) {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const current = eased * target;
+
+            if (isDecimal) {
+                el.textContent = current.toFixed(1).replace('.', ',') + suffix;
+            } else {
+                el.textContent = Math.floor(current).toLocaleString('de-DE') + suffix;
+            }
+
+            if (progress < 1) {
+                requestAnimationFrame(update);
+            } else {
+                if (isDecimal) {
+                    el.textContent = target.toFixed(1).replace('.', ',') + suffix;
+                } else {
+                    el.textContent = target.toLocaleString('de-DE') + suffix;
                 }
             }
-        });
-    }, { threshold: 0.5 });
+        }
+        requestAnimationFrame(update);
+    }
 
-    statNumbers.forEach(el => statsObserver.observe(el));
-}
+    const statNumbers = document.querySelectorAll('.stat-number[data-target]');
+    if (statNumbers.length > 0) {
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.hasAttribute('data-counted')) {
+                    entry.target.setAttribute('data-counted', '');
+                    animateCounter(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
 
-// Smooth scroll for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            e.preventDefault();
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        statNumbers.forEach(el => statsObserver.observe(el));
+    }
+
+    /* ---- Hero Parallax ---- */
+    const heroBg = document.querySelector('.hero-bg');
+    if (heroBg) {
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            if (scrollY < window.innerHeight) {
+                heroBg.style.transform = 'translateY(' + scrollY * 0.3 + 'px) scale(1.08)';
+            }
+        }, { passive: true });
+    }
+
+    /* ---- FAQ Toggle ---- */
+    document.querySelectorAll('.faq-item').forEach(item => {
+        const summary = item.querySelector('summary');
+        if (summary) {
+            summary.addEventListener('click', (e) => {
+                // Let native <details> handle open/close
+                // Just close other items for accordion behavior
+                const parent = item.parentElement;
+                if (parent) {
+                    parent.querySelectorAll('.faq-item[open]').forEach(openItem => {
+                        if (openItem !== item) {
+                            openItem.removeAttribute('open');
+                        }
+                    });
+                }
+            });
         }
     });
-});
 
-// Tilt effect on service cards (desktop only)
-if (window.matchMedia('(pointer: fine)').matches) {
-    document.querySelectorAll('.service-card').forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = (e.clientX - rect.left) / rect.width - 0.5;
-            const y = (e.clientY - rect.top) / rect.height - 0.5;
-            card.style.transform = `translateY(-6px) perspective(600px) rotateY(${x * 5}deg) rotateX(${-y * 5}deg)`;
+    /* ---- Mobile Sticky CTA Show/Hide ---- */
+    const mobileCta = document.querySelector('.mobile-sticky-cta');
+    if (mobileCta) {
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.scrollY;
+            if (currentScroll > 600) {
+                mobileCta.classList.add('visible');
+                if (currentScroll > lastScroll && currentScroll > 800) {
+                    mobileCta.classList.add('hidden');
+                } else {
+                    mobileCta.classList.remove('hidden');
+                }
+            } else {
+                mobileCta.classList.remove('visible');
+            }
+            lastScroll = currentScroll;
+        }, { passive: true });
+    }
+
+    /* ---- 3D Tilt on Service Cards (desktop only) ---- */
+    if (window.matchMedia('(pointer: fine)').matches) {
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                card.style.transform = 'translateY(-8px) perspective(600px) rotateY(' + (x * 5) + 'deg) rotateX(' + (-y * 5) + 'deg)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
         });
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = '';
-        });
-    });
-}
+    }
+
+})();
