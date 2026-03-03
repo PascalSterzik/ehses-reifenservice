@@ -1013,13 +1013,66 @@ section {
     opacity: 0;
 }
 
+/* Native <details> support */
+details.faq-item summary {
+    list-style: none;
+    cursor: pointer;
+}
+details.faq-item summary::-webkit-details-marker {
+    display: none;
+}
+details.faq-item summary::marker {
+    display: none;
+    content: "";
+}
+
+/* Style summary like .faq-question when using native <details> */
+details.faq-item > summary {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 0;
+    font-family: var(--font-heading);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: var(--tracking-tight);
+    transition: color var(--transition-fast);
+    gap: 16px;
+}
+details.faq-item > summary:hover {
+    color: var(--accent);
+}
+
+/* +/- icon via ::after pseudo-element */
+details.faq-item > summary::after {
+    content: "+";
+    font-size: 1.4rem;
+    font-weight: 300;
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 300ms var(--ease-spring);
+    color: var(--text-light);
+}
+details.faq-item[open] > summary::after {
+    content: "\2212";
+    transform: rotate(180deg);
+    color: var(--accent);
+}
+
 .faq-answer {
     display: grid;
     grid-template-rows: 0fr;
     transition: grid-template-rows 400ms var(--ease-spring);
 }
 
-.faq-item.active .faq-answer {
+.faq-item.active .faq-answer,
+details.faq-item[open] .faq-answer {
     grid-template-rows: 1fr;
 }
 
@@ -1027,7 +1080,8 @@ section {
     overflow: hidden;
 }
 
-.faq-answer-inner p {
+.faq-answer-inner p,
+.faq-answer > p {
     padding-bottom: 22px;
     font-size: 0.93rem;
     color: var(--text-light);
@@ -1483,10 +1537,12 @@ section {
 }
 
 .footer-logo-img {
-    height: 40px;
+    height: 48px;
     width: auto;
     margin-bottom: 16px;
-    filter: brightness(0) invert(1);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 6px 10px;
 }
 
 .footer-about {
