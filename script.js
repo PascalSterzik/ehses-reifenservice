@@ -208,6 +208,8 @@
                 tiltReady = false;
                 card.style.transitionDelay = '0ms';
                 card.style.transition = 'transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s cubic-bezier(0.22,1,0.36,1)';
+                card.style.transform = 'translateY(-8px)';
+                card.style.boxShadow = '0 20px 40px rgba(0,0,0,0.15)';
                 setTimeout(function() {
                     tiltReady = true;
                     card.style.transition = 'none';
@@ -225,6 +227,7 @@
                 card.style.transition = 'transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s cubic-bezier(0.22,1,0.36,1)';
                 card.style.transitionDelay = '';
                 card.style.transform = '';
+                card.style.boxShadow = '';
             });
         });
     }
