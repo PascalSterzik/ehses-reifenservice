@@ -1201,6 +1201,9 @@ details.faq-item[open] .faq-answer {
 
 .service-detail:nth-child(even) {
     background: var(--bg-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--section-gap) 48px;
+    margin: 24px 0;
 }
 
 .service-detail-grid {
@@ -1558,9 +1561,10 @@ details.faq-item[open] .faq-answer {
     height: 48px;
     width: auto;
     margin-bottom: 16px;
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 6px 10px;
+    border-radius: 4px;
+    background: #ffffff;
+    padding: 4px 8px;
+    border: 1px solid #ffffff;
 }
 
 .footer-about {
