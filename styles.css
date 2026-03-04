@@ -431,6 +431,9 @@ section {
     position: absolute;
     inset: 0;
     z-index: 1;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .hero-bg img {
@@ -1190,6 +1193,10 @@ details.faq-item[open] .faq-answer {
 /* --- Services Detail (leistungen) --- */
 .service-detail {
     padding: var(--section-gap) 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    align-items: center;
 }
 
 .service-detail:nth-child(even) {
@@ -1201,6 +1208,14 @@ details.faq-item[open] .faq-answer {
     grid-template-columns: 1fr 1fr;
     gap: 56px;
     align-items: center;
+}
+
+.service-detail--reversed {
+    direction: rtl;
+}
+
+.service-detail--reversed > * {
+    direction: ltr;
 }
 
 .service-detail:nth-child(even) .service-detail-grid {
@@ -1264,6 +1279,9 @@ details.faq-item[open] .faq-answer {
 /* Additional Services */
 .additional-services {
     background: var(--bg);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
 }
 
 .additional-grid {
@@ -1826,12 +1844,14 @@ details.faq-item[open] .faq-answer {
     }
 
     .about-grid,
+    .service-detail,
     .service-detail-grid,
     .contact-grid {
         grid-template-columns: 1fr;
         gap: 40px;
     }
 
+    .service-detail--reversed,
     .service-detail:nth-child(even) .service-detail-grid {
         direction: ltr;
     }
@@ -1849,6 +1869,7 @@ details.faq-item[open] .faq-answer {
         grid-template-columns: 1fr 1fr;
     }
 
+    .additional-services,
     .additional-grid {
         grid-template-columns: 1fr 1fr;
     }
@@ -1954,6 +1975,7 @@ details.faq-item[open] .faq-answer {
         grid-template-columns: 1fr 1fr;
     }
 
+    .additional-services,
     .additional-grid {
         grid-template-columns: 1fr;
     }
