@@ -203,18 +203,26 @@
     /* ---- 3D Tilt on Service Cards (desktop only) ---- */
     if (window.matchMedia('(pointer: fine)').matches) {
         document.querySelectorAll('.service-card').forEach(card => {
+            var tiltReady = false;
             card.addEventListener('mouseenter', () => {
-                card.style.transition = 'none';
+                tiltReady = false;
                 card.style.transitionDelay = '0ms';
+                card.style.transition = 'transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s cubic-bezier(0.22,1,0.36,1)';
+                setTimeout(function() {
+                    tiltReady = true;
+                    card.style.transition = 'none';
+                }, 400);
             });
             card.addEventListener('mousemove', (e) => {
+                if (!tiltReady) return;
                 const rect = card.getBoundingClientRect();
                 const x = (e.clientX - rect.left) / rect.width - 0.5;
                 const y = (e.clientY - rect.top) / rect.height - 0.5;
                 card.style.transform = 'translateY(-8px) perspective(600px) rotateY(' + (x * 5) + 'deg) rotateX(' + (-y * 5) + 'deg)';
             });
             card.addEventListener('mouseleave', () => {
-                card.style.transition = '';
+                tiltReady = false;
+                card.style.transition = 'transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s cubic-bezier(0.22,1,0.36,1)';
                 card.style.transitionDelay = '';
                 card.style.transform = '';
             });
