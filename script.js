@@ -203,6 +203,10 @@
     /* ---- 3D Tilt on Service Cards (desktop only) ---- */
     if (window.matchMedia('(pointer: fine)').matches) {
         document.querySelectorAll('.service-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transition = 'none';
+                card.style.transitionDelay = '0ms';
+            });
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
                 const x = (e.clientX - rect.left) / rect.width - 0.5;
@@ -210,6 +214,8 @@
                 card.style.transform = 'translateY(-8px) perspective(600px) rotateY(' + (x * 5) + 'deg) rotateX(' + (-y * 5) + 'deg)';
             });
             card.addEventListener('mouseleave', () => {
+                card.style.transition = '';
+                card.style.transitionDelay = '';
                 card.style.transform = '';
             });
         });
